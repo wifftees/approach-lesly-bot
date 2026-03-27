@@ -29,3 +29,18 @@ export interface ContactsResponse {
   user: { username: string | null; first_name: string | null };
   entity_type: { display_name: string };
 }
+
+export interface Achievement {
+  id: number;
+  entity_type_slug: string;
+  name: string;
+  emoji: string;
+  threshold: number;
+  sort_order: number;
+}
+
+export interface AchievementsResponse {
+  achievements: Achievement[];
+  user_achievements: number[];
+  users: UserInfo[];
+}

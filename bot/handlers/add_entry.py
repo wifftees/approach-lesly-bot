@@ -6,6 +6,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, Message
 
 from bot.keyboards import contact_keyboard, main_keyboard
+from bot.services import achievement as achievement_service
 from bot.services import activity as activity_service
 from bot.services import entity_type as et_service
 from bot.services import entry as entry_service
@@ -54,6 +55,12 @@ async def on_skip_contact(callback: CallbackQuery, state: FSMContext) -> None:
     et = et_service.get_by_slug(entity_type_slug)
     congrats = random.choice(et.congratulation_texts).replace("{points}", str(et.points))
     await callback.message.edit_text(congrats)
+
+    count = await entry_service.get_entries_count(user_id, entity_type_id)
+    new_achievements = await achievement_service.check_and_grant(user_id, entity_type_id, count)
+    for ach in new_achievements:
+        await callback.message.answer(f"🏆 Ачивка разблокирована: {ach.emoji} {ach.name}!")
+
     await callback.message.answer("Записано!", reply_markup=main_keyboard())
     await callback.answer()
 
@@ -82,4 +89,11 @@ async def on_contact_input(message: Message, state: FSMContext) -> None:
 
     et = et_service.get_by_slug(entity_type_slug)
     congrats = random.choice(et.congratulation_texts).replace("{points}", str(et.points))
-    await message.answer(congrats, reply_markup=main_keyboard())
+    await message.answer(congrats)
+
+    count = await entry_service.get_entries_count(user_id, entity_type_id)
+    new_achievements = await achievement_service.check_and_grant(user_id, entity_type_id, count)
+    for ach in new_achievements:
+        await message.answer(f"🏆 Ачивка разблокирована: {ach.emoji} {ach.name}!")
+
+    await message.answer("Записано!", reply_markup=main_keyboard())

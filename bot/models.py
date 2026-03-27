@@ -38,3 +38,19 @@ class ActivityLog(BaseModel):
     action: str
     metadata: dict | None = None
     created_at: datetime | None = None
+
+
+class Achievement(BaseModel):
+    id: int
+    entity_type_id: int
+    name: str
+    emoji: str
+    threshold: int
+    sort_order: int
+
+
+class UserAchievement(BaseModel):
+    id: int
+    user_id: int
+    achievement_id: int
+    achieved_at: datetime | None = None

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ActionIcon, Container, Group, Tabs, Text, Title } from "@mantine/core";
 
 import { fetchEntityTypes, fetchStats } from "./api/client";
+import { AchievementsTab } from "./components/AchievementsTab";
 import { EntityTab } from "./components/EntityTab";
 import { OverallTab } from "./components/OverallTab";
 import type { EntityType, StatsResponse } from "./types";
@@ -45,6 +46,7 @@ export default function App() {
               {et.display_name}
             </Tabs.Tab>
           ))}
+          <Tabs.Tab value="achievements">🏆 Ачивки</Tabs.Tab>
         </Tabs.List>
 
         <Tabs.Panel value="overall" pt="md">
@@ -56,6 +58,10 @@ export default function App() {
             <EntityTab entityType={et} data={stats} />
           </Tabs.Panel>
         ))}
+
+        <Tabs.Panel value="achievements" pt="md">
+          <AchievementsTab />
+        </Tabs.Panel>
       </Tabs>
     </Container>
   );

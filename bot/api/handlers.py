@@ -1,6 +1,7 @@
 from aiohttp import web
 
 from bot.db import get_client
+from bot.services import achievement as achievement_service
 from bot.services import entity_type as et_service
 from bot.services import activity as activity_service
 from bot.services import entry as entry_service
@@ -89,6 +90,49 @@ async def get_contacts(request: web.Request) -> web.Response:
         "contacts": contacts,
         "user": user_info,
         "entity_type": {"display_name": et.display_name},
+    })
+
+
+async def get_achievements(request: web.Request) -> web.Response:
+    user_id_str = request.query.get("user_id")
+    if user_id_str:
+        user_id = int(user_id_str)
+    else:
+        user_id = request["telegram_user"]["id"]
+
+    achievements = achievement_service.get_all()
+    et_by_id = {et.id: et for et in et_service.get_all()}
+    achievements_data = [
+        {
+            "id": a.id,
+            "entity_type_slug": et_by_id[a.entity_type_id].slug,
+            "name": a.name,
+            "emoji": a.emoji,
+            "threshold": a.threshold,
+            "sort_order": a.sort_order,
+        }
+        for a in achievements
+        if a.entity_type_id in et_by_id
+    ]
+
+    user_achievement_ids = await achievement_service.get_user_achievement_ids(user_id)
+
+    client = get_client()
+    users_response = await (
+        client.table("users")
+        .select("user_id, username, first_name")
+        .order("user_id")
+        .execute()
+    )
+    users = [
+        {"user_id": r["user_id"], "username": r["username"], "first_name": r["first_name"]}
+        for r in users_response.data
+    ]
+
+    return web.json_response({
+        "achievements": achievements_data,
+        "user_achievements": user_achievement_ids,
+        "users": users,
     })
 
 

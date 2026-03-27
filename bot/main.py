@@ -10,6 +10,7 @@ from bot.api.server import create_app, start_server
 from bot.config import config
 from bot.db import close_db, init_db
 from bot.handlers import register_handlers
+from bot.services import achievement as achievement_service
 from bot.services import entity_type as et_service
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
@@ -25,6 +26,9 @@ async def main() -> None:
 
     await et_service.load_entity_types()
     logger.info("loaded %d entity types", len(et_service.get_all()))
+
+    await achievement_service.load_achievements()
+    logger.info("loaded %d achievements", len(achievement_service.get_all()))
 
     register_handlers(dp)
 
