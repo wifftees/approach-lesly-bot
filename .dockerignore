@@ -1,0 +1,8 @@
+node_modules
+__pycache__
+.env
+.git
+openspec
+.claude
+miniapp/node_modules
+miniapp/dist

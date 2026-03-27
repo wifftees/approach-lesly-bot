@@ -1,0 +1,35 @@
+schema: spec-driven
+
+context: |
+  # Lesly Bot - Telegram Pickup Leaderboard Bot
+
+  ## Tech Stack
+  - Backend: Python 3.12, aiogram 3, aiohttp
+  - Database: Supabase (PostgreSQL only, no Auth/Realtime)
+  - Frontend (Mini App): React, Mantine UI, Recharts
+  - Deploy: Docker + docker-compose on VPS
+
+  ## Domain
+  Telegram bot for tracking social interactions (approaches to girls).
+  Users add entries via slash commands, earn points, compete on leaderboards.
+  Statistics displayed in a Telegram Mini App.
+
+  ## Language
+  - Bot interface: Russian
+  - Code: English
+
+  ## Key Conventions
+  - Entity types are fully dynamic (stored in DB, not hardcoded)
+  - Commands, points, keyboard all generated from entity_types table
+  - Bot serves Mini App API via aiohttp on same process
+  - Telegram Mini App validated via initData
+
+rules:
+  proposal:
+    - Include architecture diagram in ASCII
+    - List all API endpoints
+    - Define DB schema completely
+  tasks:
+    - Each task should be independently testable
+    - Group tasks by component (bot, api, miniapp, infra)
+    - Max 4 hours per task
